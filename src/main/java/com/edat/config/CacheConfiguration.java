@@ -41,6 +41,13 @@ public class CacheConfiguration {
             createCache(cm, com.edat.repository.UserRepository.USERS_BY_LOGIN_CACHE);
             createCache(cm, com.edat.repository.UserRepository.USERS_BY_EMAIL_CACHE);
             createCache(cm, com.edat.domain.Authority.class.getName());
+            createCache(cm, com.edat.domain.Alumno.class.getName());
+            createCache(cm, com.edat.domain.ResponsableAlumno.class.getName());
+            createCache(cm, com.edat.domain.Autorizado.class.getName());
+            createCache(cm, com.edat.domain.Alumno.class.getName() + ".responsableAlumnos");
+            createCache(cm, com.edat.domain.ResponsableAlumno.class.getName() + ".alumnos");
+            createCache(cm, com.edat.domain.Alumno.class.getName() + ".autorizados");
+            createCache(cm, com.edat.domain.Autorizado.class.getName() + ".alumnos");
             // jhipster-needle-ehcache-add-entry
         };
     }

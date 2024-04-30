@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <!--
+        Added the constraints for entity ResponsableAlumno.
+    -->
+    <changeSet id="20240429222227-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="responsable_alumno"
+                                 constraintName="fk_responsable_alumno__user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="responsable_alumno_id"
+                                 baseTableName="rel_responsable_alumno__alumno"
+                                 constraintName="fk_rel_responsable_alumno__alumno__responsable_alumno_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="responsable_alumno"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="alumno_id"
+                                 baseTableName="rel_responsable_alumno__alumno"
+                                 constraintName="fk_rel_responsable_alumno__alumno__alumno_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="alumno"
+                                 />
+    </changeSet>
+</databaseChangeLog>
