@@ -207,26 +207,26 @@ public class ResponsableAlumnoResource {
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<ResponsableAlumno> getResponsableAlumnoByUserId(@PathVariable("id") Long id) {
-        log.debug("REST request to get ResponsableAlumno : {}", id);
+    public ResponseEntity<ResponsableAlumno> getResponsableAlumnoByUserId(@PathVariable("id") Long userId) {
+        log.debug("REST request to get ResponsableAlumno : {}", userId);
 
-        Optional<User> optionalUser = userRepository.findById(id);
-        Optional<ResponsableAlumno> optionalResponsableAlumno = responsableAlumnoRepository.findByUser(optionalUser.get());
+        Optional<User> optionalUser = userRepository.findById(userId);
+        Optional<ResponsableAlumno> optionalResponsableAlumno = responsableAlumnoRepository.findByUserId(userId);
 
         // TODO Manejar el 404 not found como corresponde
 
         return ResponseUtil.wrapOrNotFound(optionalResponsableAlumno);
     }
-    //    @GetMapping("/{dni}/autorizados")
-    //    public Set<Autorizado> getAutorizados(@PathVariable("dni") Long dni) {
-    //        Optional<ResponsableAlumno> optionalResponsable = responsableAlumnoRepository.findByDni(dni);
-    //        if (optionalResponsable.isEmpty()) {
-    //            return null;
-    //        }
-    //        Set<Autorizado> autorizados = optionalResponsable.get().getAutorizados();
-    //        return autorizados;
-    //    }
 
+    @GetMapping("/{id}/autorizados")
+    public Set<Autorizado> getAutorizados(@PathVariable("id") Long id) {
+        Optional<ResponsableAlumno> optionalResponsable = responsableAlumnoRepository.findById(id);
+        if (optionalResponsable.isEmpty()) {
+            return null;
+        }
+        Set<Autorizado> autorizados = null; //optionalResponsable.get().
+        return autorizados;
+    }
     //    @PostMapping("/{dni_responsable_alumno}/autorizados")
     //    public Autorizado createAutorizado(@PathVariable("dni_responsable_alumno") Long dni_autorizado, @RequestBody Autorizado autorizado) {
     //        // TODO: move la logica que vamos a ejecutar ahora a un servicio !!

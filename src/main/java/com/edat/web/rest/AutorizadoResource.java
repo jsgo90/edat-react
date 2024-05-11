@@ -196,11 +196,11 @@ public class AutorizadoResource {
             .build();
     }
 
-    @PostMapping("/{dni_autorizado}/alumnos")
-    public ResponseEntity<String> asignarAlumno(@PathVariable("dni_autorizado") Long dniAutorizado, @RequestBody Long dniAlumno)
+    @PostMapping("/{id_autorizado}/alumnos")
+    public ResponseEntity<String> asignarAlumno(@PathVariable("id_autorizado") Long idAutorizado, @RequestBody Long idAlumno)
         throws URISyntaxException {
-        Optional<Autorizado> autorizadoOptional = autorizadoRepository.findByDni(dniAutorizado);
-        Optional<Alumno> alumnoOptional = alumnoRepository.findByDni(dniAlumno);
+        Optional<Autorizado> autorizadoOptional = autorizadoRepository.findById(idAutorizado);
+        Optional<Alumno> alumnoOptional = alumnoRepository.findById(idAlumno);
 
         if (autorizadoOptional.isPresent() && alumnoOptional.isPresent()) {
             Autorizado autorizado = autorizadoOptional.get();
@@ -209,19 +209,22 @@ public class AutorizadoResource {
             autorizado.addAlumno(alumno);
             autorizado = autorizadoRepository.save(autorizado);
 
+            alumno.addAutorizado(autorizado);
+            alumno = alumnoRepository.save(alumno);
+
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Autorizado o alumno no encontrado");
         }
     }
 
-    @DeleteMapping("/{dni_autorizado}/alumnos/{dni_alumno}")
+    @DeleteMapping("/{id_autorizado}/alumnos/{id_alumno}")
     public ResponseEntity<String> desasignarAlumno(
-        @PathVariable("dni_autorizado") Long dniAutorizado,
-        @PathVariable("dni_alumno") Long dniAlumno
+        @PathVariable("id_autorizado") Long idAutorizado,
+        @PathVariable("id_alumno") Long idAlumno
     ) {
-        Optional<Autorizado> autorizadoOptional = autorizadoRepository.findByDni(dniAutorizado);
-        Optional<Alumno> alumnoOptional = alumnoRepository.findByDni(dniAlumno);
+        Optional<Autorizado> autorizadoOptional = autorizadoRepository.findById(idAutorizado);
+        Optional<Alumno> alumnoOptional = alumnoRepository.findById(idAlumno);
 
         if (autorizadoOptional.isPresent() && alumnoOptional.isPresent()) {
             Autorizado autorizado = autorizadoOptional.get();
@@ -229,6 +232,9 @@ public class AutorizadoResource {
 
             autorizado.removeAlumno(alumno);
             autorizado = autorizadoRepository.save(autorizado);
+
+            alumno.removeAutorizado(autorizado);
+            alumno = alumnoRepository.save(alumno);
 
             return ResponseEntity.ok().build();
         } else {
