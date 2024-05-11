@@ -12,6 +12,8 @@ import { IUser } from 'app/shared/model/user.model';
 import { getUsers } from 'app/modules/administration/user-management/user-management.reducer';
 import { IAlumno } from 'app/shared/model/alumno.model';
 import { getEntities as getAlumnos } from 'app/entities/alumno/alumno.reducer';
+import { IAutorizado } from 'app/shared/model/autorizado.model';
+import { getEntities as getAutorizados } from 'app/entities/autorizado/autorizado.reducer';
 import { IResponsableAlumno } from 'app/shared/model/responsable-alumno.model';
 import { getEntity, updateEntity, createEntity, reset } from './responsable-alumno.reducer';
 
@@ -25,6 +27,7 @@ export const ResponsableAlumnoUpdate = () => {
 
   const users = useAppSelector(state => state.userManagement.users);
   const alumnos = useAppSelector(state => state.alumno.entities);
+  const autorizados = useAppSelector(state => state.autorizado.entities);
   const responsableAlumnoEntity = useAppSelector(state => state.responsableAlumno.entity);
   const loading = useAppSelector(state => state.responsableAlumno.loading);
   const updating = useAppSelector(state => state.responsableAlumno.updating);
@@ -43,6 +46,7 @@ export const ResponsableAlumnoUpdate = () => {
 
     dispatch(getUsers({}));
     dispatch(getAlumnos({}));
+    dispatch(getAutorizados({}));
   }, []);
 
   useEffect(() => {
@@ -65,6 +69,7 @@ export const ResponsableAlumnoUpdate = () => {
       ...values,
       user: users.find(it => it.id.toString() === values.user?.toString()),
       alumnos: mapIdList(values.alumnos),
+      autorizados: mapIdList(values.autorizados),
     };
 
     if (isNew) {
@@ -81,6 +86,7 @@ export const ResponsableAlumnoUpdate = () => {
           ...responsableAlumnoEntity,
           user: responsableAlumnoEntity?.user?.id,
           alumnos: responsableAlumnoEntity?.alumnos?.map(e => e.id.toString()),
+          autorizados: responsableAlumnoEntity?.autorizados?.map(e => e.id.toString()),
         };
 
   return (
@@ -120,6 +126,23 @@ export const ResponsableAlumnoUpdate = () => {
                 <option value="" key="0" />
                 {alumnos
                   ? alumnos.map(otherEntity => (
+                      <option value={otherEntity.id} key={otherEntity.id}>
+                        {otherEntity.dni}
+                      </option>
+                    ))
+                  : null}
+              </ValidatedField>
+              <ValidatedField
+                label="Autorizado"
+                id="responsable-alumno-autorizado"
+                data-cy="autorizado"
+                type="select"
+                multiple
+                name="autorizados"
+              >
+                <option value="" key="0" />
+                {autorizados
+                  ? autorizados.map(otherEntity => (
                       <option value={otherEntity.id} key={otherEntity.id}>
                         {otherEntity.dni}
                       </option>

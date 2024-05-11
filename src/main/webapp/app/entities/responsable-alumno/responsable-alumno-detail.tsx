@@ -56,6 +56,17 @@ export const ResponsableAlumnoDetail = () => {
                 ))
               : null}
           </dd>
+          <dt>Autorizado</dt>
+          <dd>
+            {responsableAlumnoEntity.autorizados
+              ? responsableAlumnoEntity.autorizados.map((val, i) => (
+                  <span key={val.id}>
+                    <a>{val.dni}</a>
+                    {responsableAlumnoEntity.autorizados && i === responsableAlumnoEntity.autorizados.length - 1 ? '' : ', '}
+                  </span>
+                ))
+              : null}
+          </dd>
         </dl>
         <Button tag={Link} to="/responsable-alumno" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Volver</span>

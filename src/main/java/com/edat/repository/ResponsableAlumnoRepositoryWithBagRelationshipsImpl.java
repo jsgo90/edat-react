@@ -24,7 +24,7 @@ public class ResponsableAlumnoRepositoryWithBagRelationshipsImpl implements Resp
 
     @Override
     public Optional<ResponsableAlumno> fetchBagRelationships(Optional<ResponsableAlumno> responsableAlumno) {
-        return responsableAlumno.map(this::fetchAlumnos);
+        return responsableAlumno.map(this::fetchAlumnos).map(this::fetchAutorizados);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class ResponsableAlumnoRepositoryWithBagRelationshipsImpl implements Resp
 
     @Override
     public List<ResponsableAlumno> fetchBagRelationships(List<ResponsableAlumno> responsableAlumnos) {
-        return Optional.of(responsableAlumnos).map(this::fetchAlumnos).orElse(Collections.emptyList());
+        return Optional.of(responsableAlumnos).map(this::fetchAlumnos).map(this::fetchAutorizados).orElse(Collections.emptyList());
     }
 
     ResponsableAlumno fetchAlumnos(ResponsableAlumno result) {
@@ -57,6 +57,30 @@ public class ResponsableAlumnoRepositoryWithBagRelationshipsImpl implements Resp
         List<ResponsableAlumno> result = entityManager
             .createQuery(
                 "select responsableAlumno from ResponsableAlumno responsableAlumno left join fetch responsableAlumno.alumnos where responsableAlumno in :responsableAlumnos",
+                ResponsableAlumno.class
+            )
+            .setParameter(RESPONSABLEALUMNOS_PARAMETER, responsableAlumnos)
+            .getResultList();
+        Collections.sort(result, (o1, o2) -> Integer.compare(order.get(o1.getId()), order.get(o2.getId())));
+        return result;
+    }
+
+    ResponsableAlumno fetchAutorizados(ResponsableAlumno result) {
+        return entityManager
+            .createQuery(
+                "select responsableAlumno from ResponsableAlumno responsableAlumno left join fetch responsableAlumno.autorizados where responsableAlumno.id = :id",
+                ResponsableAlumno.class
+            )
+            .setParameter(ID_PARAMETER, result.getId())
+            .getSingleResult();
+    }
+
+    List<ResponsableAlumno> fetchAutorizados(List<ResponsableAlumno> responsableAlumnos) {
+        HashMap<Object, Integer> order = new HashMap<>();
+        IntStream.range(0, responsableAlumnos.size()).forEach(index -> order.put(responsableAlumnos.get(index).getId(), index));
+        List<ResponsableAlumno> result = entityManager
+            .createQuery(
+                "select responsableAlumno from ResponsableAlumno responsableAlumno left join fetch responsableAlumno.autorizados where responsableAlumno in :responsableAlumnos",
                 ResponsableAlumno.class
             )
             .setParameter(RESPONSABLEALUMNOS_PARAMETER, responsableAlumnos)

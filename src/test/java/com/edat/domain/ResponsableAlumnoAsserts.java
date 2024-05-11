@@ -62,6 +62,7 @@ public class ResponsableAlumnoAsserts {
     public static void assertResponsableAlumnoUpdatableRelationshipsEquals(ResponsableAlumno expected, ResponsableAlumno actual) {
         assertThat(expected)
             .as("Verify ResponsableAlumno relationships")
-            .satisfies(e -> assertThat(e.getAlumnos()).as("check alumnos").isEqualTo(actual.getAlumnos()));
+            .satisfies(e -> assertThat(e.getAlumnos()).as("check alumnos").isEqualTo(actual.getAlumnos()))
+            .satisfies(e -> assertThat(e.getAutorizados()).as("check autorizados").isEqualTo(actual.getAutorizados()));
     }
 }

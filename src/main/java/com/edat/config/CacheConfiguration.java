@@ -48,6 +48,8 @@ public class CacheConfiguration {
             createCache(cm, com.edat.domain.ResponsableAlumno.class.getName() + ".alumnos");
             createCache(cm, com.edat.domain.Alumno.class.getName() + ".autorizados");
             createCache(cm, com.edat.domain.Autorizado.class.getName() + ".alumnos");
+            createCache(cm, com.edat.domain.ResponsableAlumno.class.getName() + ".autorizados");
+            createCache(cm, com.edat.domain.Autorizado.class.getName() + ".responsableAlumnos");
             // jhipster-needle-ehcache-add-entry
         };
     }

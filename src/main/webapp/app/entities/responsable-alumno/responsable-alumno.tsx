@@ -108,6 +108,9 @@ export const ResponsableAlumno = () => {
                 <th>
                   Alumno <FontAwesomeIcon icon="sort" />
                 </th>
+                <th>
+                  Autorizado <FontAwesomeIcon icon="sort" />
+                </th>
                 <th />
               </tr>
             </thead>
@@ -130,6 +133,16 @@ export const ResponsableAlumno = () => {
                           <span key={j}>
                             <Link to={`/alumno/${val.id}`}>{val.dni}</Link>
                             {j === responsableAlumno.alumnos.length - 1 ? '' : ', '}
+                          </span>
+                        ))
+                      : null}
+                  </td>
+                  <td>
+                    {responsableAlumno.autorizados
+                      ? responsableAlumno.autorizados.map((val, j) => (
+                          <span key={j}>
+                            <Link to={`/autorizado/${val.id}`}>{val.dni}</Link>
+                            {j === responsableAlumno.autorizados.length - 1 ? '' : ', '}
                           </span>
                         ))
                       : null}

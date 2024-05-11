@@ -45,6 +45,17 @@
         </createTable>
 
         <addPrimaryKey columnNames="responsable_alumno_id, alumno_id" tableName="rel_responsable_alumno__alumno"/>
+
+        <createTable tableName="rel_responsable_alumno__autorizado">
+            <column name="autorizado_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="responsable_alumno_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="responsable_alumno_id, autorizado_id" tableName="rel_responsable_alumno__autorizado"/>
     </changeSet>
 
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->

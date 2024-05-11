@@ -1,6 +1,7 @@
 package com.edat.domain;
 
 import static com.edat.domain.AlumnoTestSamples.*;
+import static com.edat.domain.AutorizadoTestSamples.*;
 import static com.edat.domain.ResponsableAlumnoTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -41,5 +42,23 @@ class ResponsableAlumnoTest {
 
         responsableAlumno.setAlumnos(new HashSet<>());
         assertThat(responsableAlumno.getAlumnos()).doesNotContain(alumnoBack);
+    }
+
+    @Test
+    void autorizadoTest() throws Exception {
+        ResponsableAlumno responsableAlumno = getResponsableAlumnoRandomSampleGenerator();
+        Autorizado autorizadoBack = getAutorizadoRandomSampleGenerator();
+
+        responsableAlumno.addAutorizado(autorizadoBack);
+        assertThat(responsableAlumno.getAutorizados()).containsOnly(autorizadoBack);
+
+        responsableAlumno.removeAutorizado(autorizadoBack);
+        assertThat(responsableAlumno.getAutorizados()).doesNotContain(autorizadoBack);
+
+        responsableAlumno.autorizados(new HashSet<>(Set.of(autorizadoBack)));
+        assertThat(responsableAlumno.getAutorizados()).containsOnly(autorizadoBack);
+
+        responsableAlumno.setAutorizados(new HashSet<>());
+        assertThat(responsableAlumno.getAutorizados()).doesNotContain(autorizadoBack);
     }
 }

@@ -31,11 +31,11 @@ public class Alumno implements Serializable {
     private Long dni;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "alumnos")
-    @JsonIgnoreProperties(value = { "user", "alumnos" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "user", "alumnos", "autorizados" }, allowSetters = true)
     private Set<ResponsableAlumno> responsableAlumnos = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "alumnos")
-    @JsonIgnoreProperties(value = { "alumnos" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "alumnos", "responsableAlumnos" }, allowSetters = true)
     private Set<Autorizado> autorizados = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

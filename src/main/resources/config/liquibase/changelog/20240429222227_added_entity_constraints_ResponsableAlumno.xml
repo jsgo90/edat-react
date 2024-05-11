@@ -30,5 +30,19 @@
                                  referencedColumnNames="id"
                                  referencedTableName="alumno"
                                  />
+
+        <addForeignKeyConstraint baseColumnNames="responsable_alumno_id"
+                                 baseTableName="rel_responsable_alumno__autorizado"
+                                 constraintName="fk_rel_responsable_alumno__autorizado__responsable_alumno_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="responsable_alumno"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="autorizado_id"
+                                 baseTableName="rel_responsable_alumno__autorizado"
+                                 constraintName="fk_rel_responsable_alumno__autorizado__autorizado_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="autorizado"
+                                 />
     </changeSet>
 </databaseChangeLog>

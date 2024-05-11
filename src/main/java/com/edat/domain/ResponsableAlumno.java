@@ -48,6 +48,15 @@ public class ResponsableAlumno implements Serializable {
     @JsonIgnoreProperties(value = { "responsableAlumnos", "autorizados" }, allowSetters = true)
     private Set<Alumno> alumnos = new HashSet<>();
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "rel_responsable_alumno__autorizado",
+        joinColumns = @JoinColumn(name = "responsable_alumno_id"),
+        inverseJoinColumns = @JoinColumn(name = "autorizado_id")
+    )
+    @JsonIgnoreProperties(value = { "alumnos", "responsableAlumnos" }, allowSetters = true)
+    private Set<Autorizado> autorizados = new HashSet<>();
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public Long getId() {
@@ -148,6 +157,29 @@ public class ResponsableAlumno implements Serializable {
 
     public ResponsableAlumno removeAlumno(Alumno alumno) {
         this.alumnos.remove(alumno);
+        return this;
+    }
+
+    public Set<Autorizado> getAutorizados() {
+        return this.autorizados;
+    }
+
+    public void setAutorizados(Set<Autorizado> autorizados) {
+        this.autorizados = autorizados;
+    }
+
+    public ResponsableAlumno autorizados(Set<Autorizado> autorizados) {
+        this.setAutorizados(autorizados);
+        return this;
+    }
+
+    public ResponsableAlumno addAutorizado(Autorizado autorizado) {
+        this.autorizados.add(autorizado);
+        return this;
+    }
+
+    public ResponsableAlumno removeAutorizado(Autorizado autorizado) {
+        this.autorizados.remove(autorizado);
         return this;
     }
 
