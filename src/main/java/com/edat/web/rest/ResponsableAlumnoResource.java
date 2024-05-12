@@ -1,8 +1,10 @@
 package com.edat.web.rest;
 
+import com.edat.domain.Alumno;
 import com.edat.domain.Autorizado;
 import com.edat.domain.ResponsableAlumno;
 import com.edat.domain.User;
+import com.edat.repository.AlumnoRepository;
 import com.edat.repository.AutorizadoRepository;
 import com.edat.repository.ResponsableAlumnoRepository;
 import com.edat.repository.UserRepository;
@@ -11,6 +13,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -42,15 +45,18 @@ public class ResponsableAlumnoResource {
     private final ResponsableAlumnoRepository responsableAlumnoRepository;
     private final AutorizadoRepository autorizadoRepository;
     private final UserRepository userRepository;
+    private final AlumnoRepository alumnoRepository;
 
     public ResponsableAlumnoResource(
         ResponsableAlumnoRepository responsableAlumnoRepository,
         AutorizadoRepository autorizadoRepository,
-        UserRepository userRepository
+        UserRepository userRepository,
+        AlumnoRepository alumnoRepository
     ) {
         this.responsableAlumnoRepository = responsableAlumnoRepository;
         this.autorizadoRepository = autorizadoRepository;
         this.userRepository = userRepository;
+        this.alumnoRepository = alumnoRepository;
     }
 
     /**
@@ -219,32 +225,38 @@ public class ResponsableAlumnoResource {
     }
 
     @GetMapping("/{id}/autorizados")
-    public Set<Autorizado> getAutorizados(@PathVariable("id") Long id) {
-        Optional<ResponsableAlumno> optionalResponsable = responsableAlumnoRepository.findById(id);
+    public Set<Autorizado> getAutorizados(@PathVariable("id") Long idResponsable, @RequestParam(value = "id", defaultValue = "0") Long id) {
+        Optional<ResponsableAlumno> optionalResponsable = responsableAlumnoRepository.findByUserId(idResponsable);
         if (optionalResponsable.isEmpty()) {
             return null;
         }
-        Set<Autorizado> autorizados = null; //optionalResponsable.get().
-        return autorizados;
-    }
-    //    @PostMapping("/{dni_responsable_alumno}/autorizados")
-    //    public Autorizado createAutorizado(@PathVariable("dni_responsable_alumno") Long dni_autorizado, @RequestBody Autorizado autorizado) {
-    //        // TODO: move la logica que vamos a ejecutar ahora a un servicio !!
-    //        Optional<ResponsableAlumno> optionalResponsable = responsableAlumnoRepository.findByDni(dni_autorizado);
-    //        if (optionalResponsable.isEmpty()) {
-    //            return null;
-    //        }
-    //        ResponsableAlumno responsableAlumno = optionalResponsable.get();
-    //
-    //        autorizado = autorizadoRepository.save(autorizado);
-    //
-    //        responsableAlumno.addA(autorizado);
-    //        responsableAlumno = responsableAlumnoRepository.save(responsableAlumno);
-    //
-    //        return autorizado;
-    //    }
-    //    // TODO si alguien desasigna un autorizado tengo que borrar al menos 2 registros
-    //    // registro autorizado | registro autorizado dentro de responsable_alumno
-    //    // registro autorizado dentro de alumno???
+        Set<Autorizado> autorizados = optionalResponsable.get().getAutorizados();
 
+        if (id == 0) {
+            return autorizados;
+        } else {
+            Optional<Alumno> alumno = alumnoRepository.findById(id);
+            Set<Autorizado> autorizadosAsignados = alumno.get().getAutorizados();
+
+            // Debemos quitar de la lista a los autorizados que ya fueron asignados
+            Set<Autorizado> autorizadosNoAsignados = new HashSet<>(autorizados);
+            autorizadosNoAsignados.removeAll(autorizadosAsignados);
+
+            return autorizadosNoAsignados;
+        }
+    }
+
+    @PostMapping("/{id}/autorizados")
+    public Autorizado createAutorizado(@PathVariable("id") Long id, @RequestBody Autorizado autorizado) {
+        Optional<ResponsableAlumno> optionalResponsable = responsableAlumnoRepository.findByUserId(id);
+        if (optionalResponsable.isEmpty()) {
+            return null;
+        }
+        ResponsableAlumno responsableAlumno = optionalResponsable.get();
+        autorizado = autorizadoRepository.save(autorizado);
+        responsableAlumno.addAutorizado(autorizado);
+        responsableAlumno = responsableAlumnoRepository.save(responsableAlumno);
+
+        return autorizado;
+    }
 }

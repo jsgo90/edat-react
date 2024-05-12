@@ -47,6 +47,6 @@ public interface ResponsableAlumnoRepository
 
     Optional<ResponsableAlumno> findByDni(Long dni);
 
-    @Query("SELECT ra FROM ResponsableAlumno ra LEFT JOIN FETCH ra.alumnos WHERE ra.user.id = :userId")
+    @Query("SELECT ra FROM ResponsableAlumno ra LEFT JOIN FETCH ra.alumnos LEFT JOIN FETCH ra.autorizados WHERE ra.user.id = :userId")
     Optional<ResponsableAlumno> findByUserId(@Param("userId") Long userId);
 }
