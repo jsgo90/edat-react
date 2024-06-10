@@ -197,11 +197,16 @@ public class AutorizadoResource {
     }
 
     @PostMapping("/{id_autorizado}/alumnos")
-    public ResponseEntity<String> asignarAlumno(@PathVariable("id_autorizado") Long idAutorizado, @RequestBody Long idAlumno)
+    public ResponseEntity<String> asignarAlumno(@PathVariable("id_autorizado") Long idAutorizado, @RequestBody String idAlumno)
         throws URISyntaxException {
         Optional<Autorizado> autorizadoOptional = autorizadoRepository.findById(idAutorizado);
-        Optional<Alumno> alumnoOptional = alumnoRepository.findById(idAlumno);
 
+        Optional<Alumno> alumnoOptional = null;
+        try {
+            alumnoOptional = alumnoRepository.findById(Long.parseLong(idAlumno));
+        } catch (NumberFormatException nfe) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("id invalido");
+        }
         if (autorizadoOptional.isPresent() && alumnoOptional.isPresent()) {
             Autorizado autorizado = autorizadoOptional.get();
             Alumno alumno = alumnoOptional.get();
@@ -240,5 +245,12 @@ public class AutorizadoResource {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Autorizado o alumno no encontrado");
         }
+    }
+
+    @GetMapping("/dni")
+    public ResponseEntity<Autorizado> validateAutorizado(@RequestParam("dni_autorizado") Long dni) {
+        log.debug("REST request to validate Autorizado dni nro: {}", dni);
+        Optional<Autorizado> autorizado = autorizadoRepository.findByDniWithAlumnos(dni);
+        return ResponseUtil.wrapOrNotFound(autorizado);
     }
 }

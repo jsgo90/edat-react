@@ -219,8 +219,6 @@ public class ResponsableAlumnoResource {
         Optional<User> optionalUser = userRepository.findById(userId);
         Optional<ResponsableAlumno> optionalResponsableAlumno = responsableAlumnoRepository.findByUserId(userId);
 
-        // TODO Manejar el 404 not found como corresponde
-
         return ResponseUtil.wrapOrNotFound(optionalResponsableAlumno);
     }
 
@@ -258,5 +256,22 @@ public class ResponsableAlumnoResource {
         responsableAlumno = responsableAlumnoRepository.save(responsableAlumno);
 
         return autorizado;
+    }
+
+    @DeleteMapping("/{id_user}/autorizados/{id_autorizado}")
+    public ResponseEntity<Void> deleteAutorizado(@PathVariable("id_user") Long id_user, @PathVariable("id_autorizado") Long id_autorizado) {
+        log.debug("REST request to delete autorizado : {}", id_autorizado);
+
+        Optional<ResponsableAlumno> optionalResponsable = responsableAlumnoRepository.findByUserId(id_user);
+        Optional<Autorizado> optionalAutorizado = autorizadoRepository.findById(id_autorizado);
+        if (optionalResponsable.isEmpty() || optionalAutorizado.isEmpty()) {
+            return null;
+        }
+        ResponsableAlumno responsableAlumno = optionalResponsable.get();
+        Autorizado autorizado = optionalAutorizado.get();
+        responsableAlumno.getAutorizados().remove(autorizado);
+        responsableAlumnoRepository.save(responsableAlumno);
+
+        return ResponseEntity.ok().build();
     }
 }
