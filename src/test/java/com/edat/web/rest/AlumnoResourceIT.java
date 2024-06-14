@@ -253,6 +253,8 @@ class AlumnoResourceIT {
         Alumno partialUpdatedAlumno = new Alumno();
         partialUpdatedAlumno.setId(alumno.getId());
 
+        partialUpdatedAlumno.nombre(UPDATED_NOMBRE).apellido(UPDATED_APELLIDO);
+
         restAlumnoMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedAlumno.getId())

@@ -203,4 +203,15 @@ public class AlumnoResource {
 
         return alumno.get().getAutorizados();
     }
+
+    @GetMapping("/dni/{dni}/autorizados")
+    public Set<Autorizado> getAutorizadosManually(@PathVariable("dni") Long id) {
+        log.debug("REST request to get all Alumnos");
+
+        Optional<Alumno> alumno = alumnoRepository.findByDni(id);
+
+        if (alumno.isEmpty()) return null;
+
+        return alumno.get().getAutorizados();
+    }
 }

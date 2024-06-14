@@ -2,6 +2,8 @@ package com.edat.domain;
 
 import static com.edat.domain.AlumnoTestSamples.*;
 import static com.edat.domain.AutorizadoTestSamples.*;
+import static com.edat.domain.BaneadosTestSamples.*;
+import static com.edat.domain.HistorialTestSamples.*;
 import static com.edat.domain.ResponsableAlumnoTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -68,5 +70,49 @@ class AlumnoTest {
         alumno.setAutorizados(new HashSet<>());
         assertThat(alumno.getAutorizados()).doesNotContain(autorizadoBack);
         assertThat(autorizadoBack.getAlumnos()).doesNotContain(alumno);
+    }
+
+    @Test
+    void historialTest() throws Exception {
+        Alumno alumno = getAlumnoRandomSampleGenerator();
+        Historial historialBack = getHistorialRandomSampleGenerator();
+
+        alumno.addHistorial(historialBack);
+        assertThat(alumno.getHistorials()).containsOnly(historialBack);
+        assertThat(historialBack.getAlumno()).isEqualTo(alumno);
+
+        alumno.removeHistorial(historialBack);
+        assertThat(alumno.getHistorials()).doesNotContain(historialBack);
+        assertThat(historialBack.getAlumno()).isNull();
+
+        alumno.historials(new HashSet<>(Set.of(historialBack)));
+        assertThat(alumno.getHistorials()).containsOnly(historialBack);
+        assertThat(historialBack.getAlumno()).isEqualTo(alumno);
+
+        alumno.setHistorials(new HashSet<>());
+        assertThat(alumno.getHistorials()).doesNotContain(historialBack);
+        assertThat(historialBack.getAlumno()).isNull();
+    }
+
+    @Test
+    void baneadosTest() throws Exception {
+        Alumno alumno = getAlumnoRandomSampleGenerator();
+        Baneados baneadosBack = getBaneadosRandomSampleGenerator();
+
+        alumno.addBaneados(baneadosBack);
+        assertThat(alumno.getBaneados()).containsOnly(baneadosBack);
+        assertThat(baneadosBack.getAlumnos()).containsOnly(alumno);
+
+        alumno.removeBaneados(baneadosBack);
+        assertThat(alumno.getBaneados()).doesNotContain(baneadosBack);
+        assertThat(baneadosBack.getAlumnos()).doesNotContain(alumno);
+
+        alumno.baneados(new HashSet<>(Set.of(baneadosBack)));
+        assertThat(alumno.getBaneados()).containsOnly(baneadosBack);
+        assertThat(baneadosBack.getAlumnos()).containsOnly(alumno);
+
+        alumno.setBaneados(new HashSet<>());
+        assertThat(alumno.getBaneados()).doesNotContain(baneadosBack);
+        assertThat(baneadosBack.getAlumnos()).doesNotContain(alumno);
     }
 }

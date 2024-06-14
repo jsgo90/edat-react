@@ -1,0 +1,24 @@
+entity Alumno {
+    nombre String
+    apellido String
+    dni Long
+}
+
+entity ResponsableAlumno {
+    nombre String
+    apellido String
+    dni Long
+    telefono String
+
+}
+
+entity Autorizado {
+    nombre String
+    apellido String
+    dni Long
+    telefono String
+}
+
+relationship OneToOne {
+    ResponsableAlumno{user(login) required} to User with builtInEntity
+}

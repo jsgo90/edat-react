@@ -309,7 +309,7 @@ class ResponsableAlumnoResourceIT {
         ResponsableAlumno partialUpdatedResponsableAlumno = new ResponsableAlumno();
         partialUpdatedResponsableAlumno.setId(responsableAlumno.getId());
 
-        partialUpdatedResponsableAlumno.telefono(UPDATED_TELEFONO);
+        partialUpdatedResponsableAlumno.nombre(UPDATED_NOMBRE).apellido(UPDATED_APELLIDO).dni(UPDATED_DNI);
 
         restResponsableAlumnoMockMvc
             .perform(

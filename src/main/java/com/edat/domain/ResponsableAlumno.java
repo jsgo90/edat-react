@@ -45,7 +45,7 @@ public class ResponsableAlumno implements Serializable {
         joinColumns = @JoinColumn(name = "responsable_alumno_id"),
         inverseJoinColumns = @JoinColumn(name = "alumno_id")
     )
-    @JsonIgnoreProperties(value = { "responsableAlumnos", "autorizados" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "responsableAlumnos", "autorizados", "historials", "baneados" }, allowSetters = true)
     private Set<Alumno> alumnos = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -54,7 +54,7 @@ public class ResponsableAlumno implements Serializable {
         joinColumns = @JoinColumn(name = "responsable_alumno_id"),
         inverseJoinColumns = @JoinColumn(name = "autorizado_id")
     )
-    @JsonIgnoreProperties(value = { "alumnos", "responsableAlumnos" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "alumnos", "responsableAlumnos", "historials" }, allowSetters = true)
     private Set<Autorizado> autorizados = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

@@ -121,6 +121,8 @@ dependencies {
 
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-hppc"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+	implementation "com.resend:resend-java:3.1.0"
+    implementation "com.squareup.okhttp3:okhttp:4.9.3" // Añadir esta línea para okhttp3
     testImplementation("com.tngtech.archunit:archunit-junit5-api:${archunitJunit5Version}") {
         exclude group: "org.slf4j", module: "slf4j-api"
     }
@@ -161,6 +163,7 @@ dependencies {
     testImplementation "org.testcontainers:jdbc"
     testImplementation "org.testcontainers:junit-jupiter"
     testImplementation "org.testcontainers:testcontainers"
+    implementation 'mysql:mysql-connector-java:8.0.33'
     // jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
 }
 

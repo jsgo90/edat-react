@@ -84,9 +84,6 @@ const LoginModal = (props: ILoginModalProps) => {
               ¿Ha olvidado su contraseña?
             </Link>
           </Alert>
-          <Alert color="warning">
-            <span>¿Aún no tienes una cuenta?</span> <Link to="/account/register">Crea una cuenta</Link>
-          </Alert>
         </ModalBody>
         <ModalFooter>
           <Button color="secondary" onClick={handleClose} tabIndex={1}>

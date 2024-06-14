@@ -35,8 +35,16 @@ public class Alumno implements Serializable {
     private Set<ResponsableAlumno> responsableAlumnos = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "alumnos")
-    @JsonIgnoreProperties(value = { "alumnos", "responsableAlumnos" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "alumnos", "responsableAlumnos", "historials" }, allowSetters = true)
     private Set<Autorizado> autorizados = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "alumno")
+    @JsonIgnoreProperties(value = { "alumno", "autorizado" }, allowSetters = true)
+    private Set<Historial> historials = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "alumnos")
+    @JsonIgnoreProperties(value = { "alumnos" }, allowSetters = true)
+    private Set<Baneados> baneados = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -151,6 +159,68 @@ public class Alumno implements Serializable {
     public Alumno removeAutorizado(Autorizado autorizado) {
         this.autorizados.remove(autorizado);
         autorizado.getAlumnos().remove(this);
+        return this;
+    }
+
+    public Set<Historial> getHistorials() {
+        return this.historials;
+    }
+
+    public void setHistorials(Set<Historial> historials) {
+        if (this.historials != null) {
+            this.historials.forEach(i -> i.setAlumno(null));
+        }
+        if (historials != null) {
+            historials.forEach(i -> i.setAlumno(this));
+        }
+        this.historials = historials;
+    }
+
+    public Alumno historials(Set<Historial> historials) {
+        this.setHistorials(historials);
+        return this;
+    }
+
+    public Alumno addHistorial(Historial historial) {
+        this.historials.add(historial);
+        historial.setAlumno(this);
+        return this;
+    }
+
+    public Alumno removeHistorial(Historial historial) {
+        this.historials.remove(historial);
+        historial.setAlumno(null);
+        return this;
+    }
+
+    public Set<Baneados> getBaneados() {
+        return this.baneados;
+    }
+
+    public void setBaneados(Set<Baneados> baneados) {
+        if (this.baneados != null) {
+            this.baneados.forEach(i -> i.removeAlumnos(this));
+        }
+        if (baneados != null) {
+            baneados.forEach(i -> i.addAlumnos(this));
+        }
+        this.baneados = baneados;
+    }
+
+    public Alumno baneados(Set<Baneados> baneados) {
+        this.setBaneados(baneados);
+        return this;
+    }
+
+    public Alumno addBaneados(Baneados baneados) {
+        this.baneados.add(baneados);
+        baneados.getAlumnos().add(this);
+        return this;
+    }
+
+    public Alumno removeBaneados(Baneados baneados) {
+        this.baneados.remove(baneados);
+        baneados.getAlumnos().remove(this);
         return this;
     }
 

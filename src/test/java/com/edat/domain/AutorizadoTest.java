@@ -2,6 +2,7 @@ package com.edat.domain;
 
 import static com.edat.domain.AlumnoTestSamples.*;
 import static com.edat.domain.AutorizadoTestSamples.*;
+import static com.edat.domain.HistorialTestSamples.*;
 import static com.edat.domain.ResponsableAlumnoTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -64,5 +65,27 @@ class AutorizadoTest {
         autorizado.setResponsableAlumnos(new HashSet<>());
         assertThat(autorizado.getResponsableAlumnos()).doesNotContain(responsableAlumnoBack);
         assertThat(responsableAlumnoBack.getAutorizados()).doesNotContain(autorizado);
+    }
+
+    @Test
+    void historialTest() throws Exception {
+        Autorizado autorizado = getAutorizadoRandomSampleGenerator();
+        Historial historialBack = getHistorialRandomSampleGenerator();
+
+        autorizado.addHistorial(historialBack);
+        assertThat(autorizado.getHistorials()).containsOnly(historialBack);
+        assertThat(historialBack.getAutorizado()).isEqualTo(autorizado);
+
+        autorizado.removeHistorial(historialBack);
+        assertThat(autorizado.getHistorials()).doesNotContain(historialBack);
+        assertThat(historialBack.getAutorizado()).isNull();
+
+        autorizado.historials(new HashSet<>(Set.of(historialBack)));
+        assertThat(autorizado.getHistorials()).containsOnly(historialBack);
+        assertThat(historialBack.getAutorizado()).isEqualTo(autorizado);
+
+        autorizado.setHistorials(new HashSet<>());
+        assertThat(autorizado.getHistorials()).doesNotContain(historialBack);
+        assertThat(historialBack.getAutorizado()).isNull();
     }
 }

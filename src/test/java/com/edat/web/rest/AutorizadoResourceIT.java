@@ -296,6 +296,8 @@ class AutorizadoResourceIT {
         Autorizado partialUpdatedAutorizado = new Autorizado();
         partialUpdatedAutorizado.setId(autorizado.getId());
 
+        partialUpdatedAutorizado.apellido(UPDATED_APELLIDO).dni(UPDATED_DNI).telefono(UPDATED_TELEFONO);
+
         restAutorizadoMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedAutorizado.getId())

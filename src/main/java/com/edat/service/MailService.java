@@ -1,6 +1,10 @@
 package com.edat.service;
 
 import com.edat.domain.User;
+import com.resend.*;
+import com.resend.core.exception.ResendException;
+import com.resend.services.emails.model.CreateEmailOptions;
+import com.resend.services.emails.model.CreateEmailResponse;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;
@@ -53,7 +57,25 @@ public class MailService {
 
     @Async
     public void sendEmail(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
-        this.sendEmailSync(to, subject, content, isMultipart, isHtml);
+        // this.sendEmailSync(to, subject, content, isMultipart, isHtml);
+        this.sendEmailSeba(to, subject, content);
+    }
+
+    private void sendEmailSeba(String to, String subject, String content) {
+        Resend resend = new Resend("re_Qae2QBj3_3DbCVczoeKF8ccjKbNA1YC7b");
+
+        CreateEmailOptions params = CreateEmailOptions.builder()
+            .from("EDAT <onboarding@resend.dev>")
+            .to(to)
+            .html(content)
+            .subject(subject)
+            .build();
+
+        try {
+            CreateEmailResponse data = resend.emails().send(params);
+        } catch (ResendException e) {
+            e.printStackTrace();
+        }
     }
 
     private void sendEmailSync(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
@@ -97,7 +119,8 @@ public class MailService {
         context.setVariable(BASE_URL, jHipsterProperties.getMail().getBaseUrl());
         String content = templateEngine.process(templateName, context);
         String subject = messageSource.getMessage(titleKey, null, locale);
-        this.sendEmailSync(user.getEmail(), subject, content, false, true);
+        //this.sendEmailSync(user.getEmail(), subject, content, false, true);
+        this.sendEmailSeba(user.getEmail(), subject, content);
     }
 
     @Async

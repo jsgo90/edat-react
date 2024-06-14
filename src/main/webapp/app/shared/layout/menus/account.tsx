@@ -22,9 +22,6 @@ const accountMenuItems = () => (
     <MenuItem id="login-item" icon="sign-in-alt" to="/login" data-cy="login">
       Iniciar sesión
     </MenuItem>
-    <MenuItem icon="user-plus" to="/account/register" data-cy="register">
-      Crear una cuenta
-    </MenuItem>
   </>
 );
 

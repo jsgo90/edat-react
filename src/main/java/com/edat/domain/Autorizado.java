@@ -39,12 +39,16 @@ public class Autorizado implements Serializable {
         joinColumns = @JoinColumn(name = "autorizado_id"),
         inverseJoinColumns = @JoinColumn(name = "alumno_id")
     )
-    @JsonIgnoreProperties(value = { "responsableAlumnos", "autorizados" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "responsableAlumnos", "autorizados", "historials", "baneados" }, allowSetters = true)
     private Set<Alumno> alumnos = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "autorizados")
     @JsonIgnoreProperties(value = { "user", "alumnos", "autorizados" }, allowSetters = true)
     private Set<ResponsableAlumno> responsableAlumnos = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "autorizado")
+    @JsonIgnoreProperties(value = { "alumno", "autorizado" }, allowSetters = true)
+    private Set<Historial> historials = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -164,6 +168,37 @@ public class Autorizado implements Serializable {
     public Autorizado removeResponsableAlumno(ResponsableAlumno responsableAlumno) {
         this.responsableAlumnos.remove(responsableAlumno);
         responsableAlumno.getAutorizados().remove(this);
+        return this;
+    }
+
+    public Set<Historial> getHistorials() {
+        return this.historials;
+    }
+
+    public void setHistorials(Set<Historial> historials) {
+        if (this.historials != null) {
+            this.historials.forEach(i -> i.setAutorizado(null));
+        }
+        if (historials != null) {
+            historials.forEach(i -> i.setAutorizado(this));
+        }
+        this.historials = historials;
+    }
+
+    public Autorizado historials(Set<Historial> historials) {
+        this.setHistorials(historials);
+        return this;
+    }
+
+    public Autorizado addHistorial(Historial historial) {
+        this.historials.add(historial);
+        historial.setAutorizado(this);
+        return this;
+    }
+
+    public Autorizado removeHistorial(Historial historial) {
+        this.historials.remove(historial);
+        historial.setAutorizado(null);
         return this;
     }
 
