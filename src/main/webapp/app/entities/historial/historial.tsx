@@ -67,15 +67,11 @@ export const Historial = () => {
   return (
     <div>
       <h2 id="historial-heading" data-cy="HistorialHeading">
-        Historials
+        Registros de salida
         <div className="d-flex justify-content-end">
           <Button className="me-2" color="info" onClick={handleSyncList} disabled={loading}>
             <FontAwesomeIcon icon="sync" spin={loading} /> Refrescar lista
           </Button>
-          <Link to="/historial/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
-            <FontAwesomeIcon icon="plus" />
-            &nbsp; Crear nuevo Historial
-          </Link>
         </div>
       </h2>
       <div className="table-responsive">
@@ -83,9 +79,6 @@ export const Historial = () => {
           <Table responsive>
             <thead>
               <tr>
-                <th className="hand" onClick={sort('id')}>
-                  ID <FontAwesomeIcon icon={getSortIconByFieldName('id')} />
-                </th>
                 <th className="hand" onClick={sort('fecha')}>
                   Fecha <FontAwesomeIcon icon={getSortIconByFieldName('fecha')} />
                 </th>
@@ -101,31 +94,17 @@ export const Historial = () => {
             <tbody>
               {historialList.map((historial, i) => (
                 <tr key={`entity-${i}`} data-cy="entityTable">
-                  <td>
-                    <Button tag={Link} to={`/historial/${historial.id}`} color="link" size="sm">
-                      {historial.id}
-                    </Button>
-                  </td>
                   <td>{historial.fecha ? <TextFormat type="date" value={historial.fecha} format={APP_DATE_FORMAT} /> : null}</td>
-                  <td>{historial.alumno ? <Link to={`/alumno/${historial.alumno.id}`}>{historial.alumno.dni}</Link> : ''}</td>
                   <td>
-                    {historial.autorizado ? <Link to={`/autorizado/${historial.autorizado.id}`}>{historial.autorizado.dni}</Link> : ''}
+                    {historial.alumno.nombre} {historial.alumno.apellido} - {historial.alumno.dni}
+                  </td>
+                  <td>
+                    {historial.autorizado.nombre} {historial.autorizado.apellido} - {historial.autorizado.dni}
                   </td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`/historial/${historial.id}`} color="info" size="sm" data-cy="entityDetailsButton">
-                        <FontAwesomeIcon icon="eye" /> <span className="d-none d-md-inline">Vista</span>
-                      </Button>
-                      <Button tag={Link} to={`/historial/${historial.id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
-                        <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Editar</span>
-                      </Button>
-                      <Button
-                        onClick={() => (window.location.href = `/historial/${historial.id}/delete`)}
-                        color="danger"
-                        size="sm"
-                        data-cy="entityDeleteButton"
-                      >
-                        <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Eliminar</span>
+                        <FontAwesomeIcon icon="eye" /> <span className="d-none d-md-inline">Detalles</span>
                       </Button>
                     </div>
                   </td>
@@ -134,7 +113,7 @@ export const Historial = () => {
             </tbody>
           </Table>
         ) : (
-          !loading && <div className="alert alert-warning">Ningún Historials encontrado</div>
+          !loading && <div className="alert alert-warning">No hay registros disponibles</div>
         )}
       </div>
     </div>

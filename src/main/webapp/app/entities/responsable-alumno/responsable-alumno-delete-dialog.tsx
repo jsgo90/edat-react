@@ -42,10 +42,10 @@ export const ResponsableAlumnoDeleteDialog = () => {
   return (
     <Modal isOpen toggle={handleClose}>
       <ModalHeader toggle={handleClose} data-cy="responsableAlumnoDeleteDialogHeading">
-        Confirmar operación de borrado
+        Eliminar registro
       </ModalHeader>
       <ModalBody id="edatApp.responsableAlumno.delete.question">
-        ¿Seguro que quiere eliminar Responsable Alumno {responsableAlumnoEntity.id}?
+        ¿Desea quitar el registro de {responsableAlumnoEntity.nombre} {responsableAlumnoEntity.apellido}?
       </ModalBody>
       <ModalFooter>
         <Button color="secondary" onClick={handleClose}>

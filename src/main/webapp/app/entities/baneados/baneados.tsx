@@ -67,14 +67,14 @@ export const Baneados = () => {
   return (
     <div>
       <h2 id="baneados-heading" data-cy="BaneadosHeading">
-        Baneados
+        Personas no autorizadas
         <div className="d-flex justify-content-end">
           <Button className="me-2" color="info" onClick={handleSyncList} disabled={loading}>
-            <FontAwesomeIcon icon="sync" spin={loading} /> Refrescar lista
+            <FontAwesomeIcon icon="sync" spin={loading} />
           </Button>
           <Link to="/baneados/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
             <FontAwesomeIcon icon="plus" />
-            &nbsp; Crear nuevo Baneados
+            &nbsp; Nuevo Registro
           </Link>
         </div>
       </h2>
@@ -83,26 +83,11 @@ export const Baneados = () => {
           <Table responsive>
             <thead>
               <tr>
-                <th className="hand" onClick={sort('id')}>
-                  ID <FontAwesomeIcon icon={getSortIconByFieldName('id')} />
-                </th>
-                <th className="hand" onClick={sort('dni')}>
-                  Dni <FontAwesomeIcon icon={getSortIconByFieldName('dni')} />
-                </th>
                 <th className="hand" onClick={sort('nombre')}>
                   Nombre <FontAwesomeIcon icon={getSortIconByFieldName('nombre')} />
                 </th>
                 <th className="hand" onClick={sort('apellido')}>
                   Apellido <FontAwesomeIcon icon={getSortIconByFieldName('apellido')} />
-                </th>
-                <th className="hand" onClick={sort('motivo')}>
-                  Motivo <FontAwesomeIcon icon={getSortIconByFieldName('motivo')} />
-                </th>
-                <th className="hand" onClick={sort('fechaBaneo')}>
-                  Fecha Baneo <FontAwesomeIcon icon={getSortIconByFieldName('fechaBaneo')} />
-                </th>
-                <th>
-                  Alumnos <FontAwesomeIcon icon="sort" />
                 </th>
                 <th />
               </tr>
@@ -110,33 +95,15 @@ export const Baneados = () => {
             <tbody>
               {baneadosList.map((baneados, i) => (
                 <tr key={`entity-${i}`} data-cy="entityTable">
-                  <td>
-                    <Button tag={Link} to={`/baneados/${baneados.id}`} color="link" size="sm">
-                      {baneados.id}
-                    </Button>
-                  </td>
-                  <td>{baneados.dni}</td>
                   <td>{baneados.nombre}</td>
                   <td>{baneados.apellido}</td>
-                  <td>{baneados.motivo}</td>
-                  <td>{baneados.fechaBaneo ? <TextFormat type="date" value={baneados.fechaBaneo} format={APP_DATE_FORMAT} /> : null}</td>
-                  <td>
-                    {baneados.alumnos
-                      ? baneados.alumnos.map((val, j) => (
-                          <span key={j}>
-                            <Link to={`/alumno/${val.id}`}>{val.dni}</Link>
-                            {j === baneados.alumnos.length - 1 ? '' : ', '}
-                          </span>
-                        ))
-                      : null}
-                  </td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`/baneados/${baneados.id}`} color="info" size="sm" data-cy="entityDetailsButton">
-                        <FontAwesomeIcon icon="eye" /> <span className="d-none d-md-inline">Vista</span>
+                        <FontAwesomeIcon icon="eye" /> <span className="d-none d-md-inline"></span>
                       </Button>
                       <Button tag={Link} to={`/baneados/${baneados.id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
-                        <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Editar</span>
+                        <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline"></span>
                       </Button>
                       <Button
                         onClick={() => (window.location.href = `/baneados/${baneados.id}/delete`)}
@@ -144,7 +111,7 @@ export const Baneados = () => {
                         size="sm"
                         data-cy="entityDeleteButton"
                       >
-                        <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Eliminar</span>
+                        <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline"></span>
                       </Button>
                     </div>
                   </td>

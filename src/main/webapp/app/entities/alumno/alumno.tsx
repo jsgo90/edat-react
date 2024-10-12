@@ -69,11 +69,11 @@ export const Alumno = () => {
         Alumnos
         <div className="d-flex justify-content-end">
           <Button className="me-2" color="info" onClick={handleSyncList} disabled={loading}>
-            <FontAwesomeIcon icon="sync" spin={loading} /> Refrescar lista
+            <FontAwesomeIcon icon="sync" spin={loading} />
           </Button>
           <Link to="/alumno/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
             <FontAwesomeIcon icon="plus" />
-            &nbsp; Crear nuevo Alumno
+            &nbsp; Nuevo Alumno
           </Link>
         </div>
       </h2>
@@ -82,9 +82,6 @@ export const Alumno = () => {
           <Table responsive>
             <thead>
               <tr>
-                <th className="hand" onClick={sort('id')}>
-                  ID <FontAwesomeIcon icon={getSortIconByFieldName('id')} />
-                </th>
                 <th className="hand" onClick={sort('nombre')}>
                   Nombre <FontAwesomeIcon icon={getSortIconByFieldName('nombre')} />
                 </th>
@@ -100,21 +97,16 @@ export const Alumno = () => {
             <tbody>
               {alumnoList.map((alumno, i) => (
                 <tr key={`entity-${i}`} data-cy="entityTable">
-                  <td>
-                    <Button tag={Link} to={`/alumno/${alumno.id}`} color="link" size="sm">
-                      {alumno.id}
-                    </Button>
-                  </td>
                   <td>{alumno.nombre}</td>
                   <td>{alumno.apellido}</td>
                   <td>{alumno.dni}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`/alumno/${alumno.id}`} color="info" size="sm" data-cy="entityDetailsButton">
-                        <FontAwesomeIcon icon="eye" /> <span className="d-none d-md-inline">Vista</span>
+                        <FontAwesomeIcon icon="eye" /> <span className="d-none d-md-inline"></span>
                       </Button>
                       <Button tag={Link} to={`/alumno/${alumno.id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
-                        <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Editar</span>
+                        <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline"></span>
                       </Button>
                       <Button
                         onClick={() => (window.location.href = `/alumno/${alumno.id}/delete`)}
@@ -122,7 +114,7 @@ export const Alumno = () => {
                         size="sm"
                         data-cy="entityDeleteButton"
                       >
-                        <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Eliminar</span>
+                        <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline"></span>
                       </Button>
                     </div>
                   </td>

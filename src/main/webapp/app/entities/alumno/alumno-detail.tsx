@@ -24,19 +24,13 @@ export const AlumnoDetail = () => {
         <h2 data-cy="alumnoDetailsHeading">Alumno</h2>
         <dl className="jh-entity-details">
           <dt>
-            <span id="id">ID</span>
-          </dt>
-          <dd>{alumnoEntity.id}</dd>
-          <dt>
             <span id="nombre">Nombre</span>
           </dt>
-          <dd>{alumnoEntity.nombre}</dd>
+          <dd>
+            {alumnoEntity.nombre} {alumnoEntity.apellido}
+          </dd>
           <dt>
-            <span id="apellido">Apellido</span>
-          </dt>
-          <dd>{alumnoEntity.apellido}</dd>
-          <dt>
-            <span id="dni">Dni</span>
+            <span id="dni">DNI</span>
           </dt>
           <dd>{alumnoEntity.dni}</dd>
         </dl>

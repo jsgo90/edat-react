@@ -25,25 +25,22 @@ export const HistorialDetail = () => {
         <h2 data-cy="historialDetailsHeading">Historial</h2>
         <dl className="jh-entity-details">
           <dt>
-            <span id="id">ID</span>
-          </dt>
-          <dd>{historialEntity.id}</dd>
-          <dt>
             <span id="fecha">Fecha</span>
           </dt>
           <dd>{historialEntity.fecha ? <TextFormat value={historialEntity.fecha} type="date" format={APP_DATE_FORMAT} /> : null}</dd>
           <dt>Alumno</dt>
-          <dd>{historialEntity.alumno ? historialEntity.alumno.dni : ''}</dd>
+          <dd>
+            {historialEntity.alumno.nombre} {historialEntity.alumno.apellido} - {historialEntity.alumno.dni}{' '}
+          </dd>
           <dt>Autorizado</dt>
-          <dd>{historialEntity.autorizado ? historialEntity.autorizado.dni : ''}</dd>
+          <dd>
+            {historialEntity.autorizado.nombre} {historialEntity.autorizado.apellido} - {historialEntity.autorizado.dni}
+          </dd>
         </dl>
         <Button tag={Link} to="/historial" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Volver</span>
         </Button>
         &nbsp;
-        <Button tag={Link} to={`/historial/${historialEntity.id}/edit`} replace color="primary">
-          <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Editar</span>
-        </Button>
       </Col>
     </Row>
   );

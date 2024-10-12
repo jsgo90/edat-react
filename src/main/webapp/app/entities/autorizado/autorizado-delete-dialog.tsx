@@ -42,9 +42,11 @@ export const AutorizadoDeleteDialog = () => {
   return (
     <Modal isOpen toggle={handleClose}>
       <ModalHeader toggle={handleClose} data-cy="autorizadoDeleteDialogHeading">
-        Confirmar operación de borrado
+        Eliminar registro
       </ModalHeader>
-      <ModalBody id="edatApp.autorizado.delete.question">¿Seguro que quiere eliminar Autorizado {autorizadoEntity.id}?</ModalBody>
+      <ModalBody id="edatApp.autorizado.delete.question">
+        ¿Desea quitar el registro de {autorizadoEntity.nombre} {autorizadoEntity.apellido}?
+      </ModalBody>
       <ModalFooter>
         <Button color="secondary" onClick={handleClose}>
           <FontAwesomeIcon icon="ban" />

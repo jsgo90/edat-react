@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Button, Row, Col, FormText } from 'reactstrap';
-import { isNumber, ValidatedField, ValidatedForm } from 'react-jhipster';
+import { Button, Row, Col, ListGroup, ListGroupItem } from 'reactstrap';
+import { ValidatedField, ValidatedForm } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons'; // Importar icono de FontAwesome
+import Select from 'react-select'; // Importar React Select
 
 import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
-import { mapIdList } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
-
-import { IAlumno } from 'app/shared/model/alumno.model';
 import { getEntities as getAlumnos } from 'app/entities/alumno/alumno.reducer';
-import { IBaneados } from 'app/shared/model/baneados.model';
 import { getEntity, updateEntity, createEntity, reset } from './baneados.reducer';
 
 export const BaneadosUpdate = () => {
@@ -27,6 +25,8 @@ export const BaneadosUpdate = () => {
   const updating = useAppSelector(state => state.baneados.updating);
   const updateSuccess = useAppSelector(state => state.baneados.updateSuccess);
 
+  const [selectedAlumnos, setSelectedAlumnos] = useState([]);
+
   const handleClose = () => {
     navigate('/baneados');
   };
@@ -39,7 +39,7 @@ export const BaneadosUpdate = () => {
     }
 
     dispatch(getAlumnos({}));
-  }, []);
+  }, [dispatch, id, isNew]);
 
   useEffect(() => {
     if (updateSuccess) {
@@ -47,20 +47,19 @@ export const BaneadosUpdate = () => {
     }
   }, [updateSuccess]);
 
-  // eslint-disable-next-line complexity
+  useEffect(() => {
+    if (!isNew && baneadosEntity) {
+      setSelectedAlumnos(baneadosEntity.alumnos?.map(alumno => alumno.id) || []);
+    }
+  }, [baneadosEntity, isNew]);
+
   const saveEntity = values => {
-    if (values.id !== undefined && typeof values.id !== 'number') {
-      values.id = Number(values.id);
-    }
-    if (values.dni !== undefined && typeof values.dni !== 'number') {
-      values.dni = Number(values.dni);
-    }
     values.fechaBaneo = convertDateTimeToServer(values.fechaBaneo);
 
     const entity = {
       ...baneadosEntity,
       ...values,
-      alumnos: mapIdList(values.alumnos),
+      alumnos: selectedAlumnos.map(id => ({ id })),
     };
 
     if (isNew) {
@@ -78,8 +77,19 @@ export const BaneadosUpdate = () => {
       : {
           ...baneadosEntity,
           fechaBaneo: convertDateTimeFromServer(baneadosEntity.fechaBaneo),
-          alumnos: baneadosEntity?.alumnos?.map(e => e.id.toString()),
         };
+
+  // Función para añadir un alumno seleccionado
+  const handleAddAlumno = selectedOption => {
+    if (selectedOption && !selectedAlumnos.includes(selectedOption.value)) {
+      setSelectedAlumnos([...selectedAlumnos, selectedOption.value]);
+    }
+  };
+
+  // Función para eliminar un alumno seleccionado de la lista
+  const handleRemoveAlumno = id => {
+    setSelectedAlumnos(selectedAlumnos.filter(alumnoId => alumnoId !== id));
+  };
 
   return (
     <div>
@@ -109,16 +119,37 @@ export const BaneadosUpdate = () => {
                 type="datetime-local"
                 placeholder="YYYY-MM-DD HH:mm"
               />
-              <ValidatedField label="Alumnos" id="baneados-alumnos" data-cy="alumnos" type="select" multiple name="alumnos">
-                <option value="" key="0" />
-                {alumnos
-                  ? alumnos.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.dni}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField>
+              {/* Select para agregar Alumnos */}
+              <div className="mb-3">
+                <label htmlFor="baneados-alumnos">Agregar Alumnos</label>
+                <Select
+                  id="baneados-alumnos"
+                  options={alumnos
+                    .filter(alumno => !selectedAlumnos.includes(alumno.id)) // Filtrar alumnos que ya están seleccionados
+                    .map(alumno => ({
+                      value: alumno.id,
+                      label: `${alumno.nombre} ${alumno.apellido} - ${alumno.dni}`,
+                    }))}
+                  onChange={handleAddAlumno}
+                  isClearable
+                />
+                <ListGroup className="mt-2">
+                  {selectedAlumnos.map(alumnoId => {
+                    const alumno = alumnos.find(al => al.id === alumnoId);
+                    return (
+                      <ListGroupItem key={alumnoId} className="d-flex justify-content-between align-items-center">
+                        {`${alumno.nombre} ${alumno.apellido} - ${alumno.dni}`}
+                        <FontAwesomeIcon
+                          icon={faTimes}
+                          className="text-danger"
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => handleRemoveAlumno(alumnoId)}
+                        />
+                      </ListGroupItem>
+                    );
+                  })}
+                </ListGroup>
+              </div>
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/baneados" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

@@ -8,3 +8,67 @@ Main page styles
   background: url('/content/images/jhipster_family_member_2.svg') no-repeat center top;
   background-size: contain;
 }
+
+.home-container {
+  &.unauthenticated {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-size: cover;
+
+    .background-overlay {
+      background: rgba(0, 0, 0, 0.6);
+      padding: 50px;
+      border-radius: 20px;
+      text-align: center;
+      color: white;
+      max-width: 600px;
+
+      .app-logo {
+        width: 150px;
+        height: auto;
+        margin-bottom: 25px;
+      }
+
+      .welcome-title {
+        font-size: 2.5rem;
+        font-weight: bold;
+      }
+
+      .login-button {
+        margin-top: 30px;
+      }
+    }
+  }
+  .authenticated-content {
+    .display-3 {
+      font-weight: bold;
+      color: #0d6efd;
+    }
+
+    .info-card {
+      text-align: center;
+      margin-top: 20px;
+      box-shadow: 0 6px 12px 0 rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+
+      .card-body {
+        padding: 25px;
+
+        .fa-icon {
+          margin-bottom: 20px;
+        }
+
+        .btn {
+          margin-top: 15px;
+          align-self: center;
+        }
+      }
+    }
+  }
+}

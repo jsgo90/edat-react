@@ -1,27 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Button, Row, Col, FormText } from 'reactstrap';
-import { isNumber, ValidatedField, ValidatedForm } from 'react-jhipster';
+import { Button, Row, Col, FormText, ListGroup, ListGroupItem, Badge } from 'reactstrap';
+import { ValidatedField, ValidatedForm } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons'; // Importar el icono de FontAwesome
+import Select from 'react-select'; // Importar React Select
 
-import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
-import { mapIdList } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
-
-import { IUser } from 'app/shared/model/user.model';
 import { getUsers } from 'app/modules/administration/user-management/user-management.reducer';
-import { IAlumno } from 'app/shared/model/alumno.model';
 import { getEntities as getAlumnos } from 'app/entities/alumno/alumno.reducer';
-import { IAutorizado } from 'app/shared/model/autorizado.model';
 import { getEntities as getAutorizados } from 'app/entities/autorizado/autorizado.reducer';
-import { IResponsableAlumno } from 'app/shared/model/responsable-alumno.model';
 import { getEntity, updateEntity, createEntity, reset } from './responsable-alumno.reducer';
 
 export const ResponsableAlumnoUpdate = () => {
   const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
-
   const { id } = useParams<'id'>();
   const isNew = id === undefined;
 
@@ -32,6 +26,9 @@ export const ResponsableAlumnoUpdate = () => {
   const loading = useAppSelector(state => state.responsableAlumno.loading);
   const updating = useAppSelector(state => state.responsableAlumno.updating);
   const updateSuccess = useAppSelector(state => state.responsableAlumno.updateSuccess);
+
+  const [selectedAlumnos, setSelectedAlumnos] = useState([]);
+  const [selectedAutorizados, setSelectedAutorizados] = useState([]);
 
   const handleClose = () => {
     navigate('/responsable-alumno');
@@ -55,21 +52,20 @@ export const ResponsableAlumnoUpdate = () => {
     }
   }, [updateSuccess]);
 
-  // eslint-disable-next-line complexity
-  const saveEntity = values => {
-    if (values.id !== undefined && typeof values.id !== 'number') {
-      values.id = Number(values.id);
+  useEffect(() => {
+    if (!isNew && responsableAlumnoEntity) {
+      setSelectedAlumnos(responsableAlumnoEntity.alumnos?.map(alumno => alumno.id) || []);
+      setSelectedAutorizados(responsableAlumnoEntity.autorizados?.map(autorizado => autorizado.id) || []);
     }
-    if (values.dni !== undefined && typeof values.dni !== 'number') {
-      values.dni = Number(values.dni);
-    }
+  }, [responsableAlumnoEntity, isNew]);
 
+  const saveEntity = values => {
     const entity = {
       ...responsableAlumnoEntity,
       ...values,
       user: users.find(it => it.id.toString() === values.user?.toString()),
-      alumnos: mapIdList(values.alumnos),
-      autorizados: mapIdList(values.autorizados),
+      alumnos: selectedAlumnos.map(id => ({ id })),
+      autorizados: selectedAutorizados.map(id => ({ id })),
     };
 
     if (isNew) {
@@ -85,16 +81,38 @@ export const ResponsableAlumnoUpdate = () => {
       : {
           ...responsableAlumnoEntity,
           user: responsableAlumnoEntity?.user?.id,
-          alumnos: responsableAlumnoEntity?.alumnos?.map(e => e.id.toString()),
-          autorizados: responsableAlumnoEntity?.autorizados?.map(e => e.id.toString()),
         };
+
+  // Función para añadir un alumno seleccionado
+  const handleAddAlumno = selectedOption => {
+    if (selectedOption && !selectedAlumnos.includes(selectedOption.value)) {
+      setSelectedAlumnos([...selectedAlumnos, selectedOption.value]);
+    }
+  };
+
+  // Función para añadir un autorizado seleccionado
+  const handleAddAutorizado = selectedOption => {
+    if (selectedOption && !selectedAutorizados.includes(selectedOption.value)) {
+      setSelectedAutorizados([...selectedAutorizados, selectedOption.value]);
+    }
+  };
+
+  // Función para eliminar un alumno seleccionado de la lista
+  const handleRemoveAlumno = id => {
+    setSelectedAlumnos(selectedAlumnos.filter(alumnoId => alumnoId !== id));
+  };
+
+  // Función para eliminar un autorizado seleccionado de la lista
+  const handleRemoveAutorizado = id => {
+    setSelectedAutorizados(selectedAutorizados.filter(autorizadoId => autorizadoId !== id));
+  };
 
   return (
     <div>
       <Row className="justify-content-center">
         <Col md="8">
           <h2 id="edatApp.responsableAlumno.home.createOrEditLabel" data-cy="ResponsableAlumnoCreateUpdateHeading">
-            Crear o editar Responsable Alumno
+            Crear o editar Padre / Madre
           </h2>
         </Col>
       </Row>
@@ -104,14 +122,11 @@ export const ResponsableAlumnoUpdate = () => {
             <p>Loading...</p>
           ) : (
             <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
-              {!isNew ? (
-                <ValidatedField name="id" required readOnly id="responsable-alumno-id" label="ID" validate={{ required: true }} />
-              ) : null}
               <ValidatedField label="Nombre" id="responsable-alumno-nombre" name="nombre" data-cy="nombre" type="text" />
               <ValidatedField label="Apellido" id="responsable-alumno-apellido" name="apellido" data-cy="apellido" type="text" />
               <ValidatedField label="Dni" id="responsable-alumno-dni" name="dni" data-cy="dni" type="text" />
               <ValidatedField label="Telefono" id="responsable-alumno-telefono" name="telefono" data-cy="telefono" type="text" />
-              <ValidatedField id="responsable-alumno-user" name="user" data-cy="user" label="User" type="select" required>
+              <ValidatedField id="responsable-alumno-user" name="user" data-cy="user" label="Usuario" type="select" required>
                 <option value="" key="0" />
                 {users
                   ? users.map(otherEntity => (
@@ -121,34 +136,68 @@ export const ResponsableAlumnoUpdate = () => {
                     ))
                   : null}
               </ValidatedField>
-              <FormText>Este campo es obligatorio.</FormText>
-              <ValidatedField label="Alumno" id="responsable-alumno-alumno" data-cy="alumno" type="select" multiple name="alumnos">
-                <option value="" key="0" />
-                {alumnos
-                  ? alumnos.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.dni}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField>
-              <ValidatedField
-                label="Autorizado"
-                id="responsable-alumno-autorizado"
-                data-cy="autorizado"
-                type="select"
-                multiple
-                name="autorizados"
-              >
-                <option value="" key="0" />
-                {autorizados
-                  ? autorizados.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.dni}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField>
+              {/* Select para agregar Alumnos */}
+              <div className="mb-3">
+                <label htmlFor="responsable-alumno-alumnos">Alumnos</label>
+                <Select
+                  id="responsable-alumno-alumnos"
+                  options={alumnos
+                    .filter(alumno => !selectedAlumnos.includes(alumno.id)) // Filtrar alumnos que ya están seleccionados
+                    .map(alumno => ({
+                      value: alumno.id,
+                      label: `${alumno.nombre} ${alumno.apellido} - ${alumno.dni}`,
+                    }))}
+                  onChange={handleAddAlumno}
+                  isClearable
+                />
+                <ListGroup className="mt-2">
+                  {selectedAlumnos.map(alumnoId => {
+                    const alumno = alumnos.find(al => al.id === alumnoId);
+                    return (
+                      <ListGroupItem key={alumnoId} className="d-flex justify-content-between align-items-center">
+                        {`${alumno.nombre} ${alumno.apellido} - ${alumno.dni}`}
+                        <FontAwesomeIcon
+                          icon={faTimes}
+                          className="text-danger"
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => handleRemoveAlumno(alumnoId)}
+                        />
+                      </ListGroupItem>
+                    );
+                  })}
+                </ListGroup>
+              </div>
+              {/* Select para agregar Autorizados */}
+              <div className="mb-3">
+                <label htmlFor="responsable-alumno-autorizados">Autorizados</label>
+                <Select
+                  id="responsable-alumno-autorizados"
+                  options={autorizados
+                    .filter(autorizado => !selectedAutorizados.includes(autorizado.id)) // Filtrar autorizados que ya están seleccionados
+                    .map(autorizado => ({
+                      value: autorizado.id,
+                      label: `${autorizado.nombre} ${autorizado.apellido} - ${autorizado.dni} `,
+                    }))}
+                  onChange={handleAddAutorizado}
+                  isClearable
+                />
+                <ListGroup className="mt-2">
+                  {selectedAutorizados.map(autorizadoId => {
+                    const autorizado = autorizados.find(au => au.id === autorizadoId);
+                    return (
+                      <ListGroupItem key={autorizadoId} className="d-flex justify-content-between align-items-center">
+                        {`${autorizado.nombre} ${autorizado.apellido} - ${autorizado.dni}`}
+                        <FontAwesomeIcon
+                          icon={faTimes}
+                          className="text-danger"
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => handleRemoveAutorizado(autorizadoId)}
+                        />
+                      </ListGroupItem>
+                    );
+                  })}
+                </ListGroup>
+              </div>
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/responsable-alumno" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

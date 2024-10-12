@@ -69,7 +69,7 @@ export const ResponsableAlumno = () => {
         Responsable Alumnos
         <div className="d-flex justify-content-end">
           <Button className="me-2" color="info" onClick={handleSyncList} disabled={loading}>
-            <FontAwesomeIcon icon="sync" spin={loading} /> Refrescar lista
+            <FontAwesomeIcon icon="sync" spin={loading} />
           </Button>
           <Link
             to="/responsable-alumno/new"
@@ -78,7 +78,7 @@ export const ResponsableAlumno = () => {
             data-cy="entityCreateButton"
           >
             <FontAwesomeIcon icon="plus" />
-            &nbsp; Crear nuevo Responsable Alumno
+            &nbsp; Nuevo
           </Link>
         </div>
       </h2>
@@ -87,29 +87,11 @@ export const ResponsableAlumno = () => {
           <Table responsive>
             <thead>
               <tr>
-                <th className="hand" onClick={sort('id')}>
-                  ID <FontAwesomeIcon icon={getSortIconByFieldName('id')} />
-                </th>
                 <th className="hand" onClick={sort('nombre')}>
                   Nombre <FontAwesomeIcon icon={getSortIconByFieldName('nombre')} />
                 </th>
                 <th className="hand" onClick={sort('apellido')}>
                   Apellido <FontAwesomeIcon icon={getSortIconByFieldName('apellido')} />
-                </th>
-                <th className="hand" onClick={sort('dni')}>
-                  Dni <FontAwesomeIcon icon={getSortIconByFieldName('dni')} />
-                </th>
-                <th className="hand" onClick={sort('telefono')}>
-                  Telefono <FontAwesomeIcon icon={getSortIconByFieldName('telefono')} />
-                </th>
-                <th>
-                  User <FontAwesomeIcon icon="sort" />
-                </th>
-                <th>
-                  Alumno <FontAwesomeIcon icon="sort" />
-                </th>
-                <th>
-                  Autorizado <FontAwesomeIcon icon="sort" />
                 </th>
                 <th />
               </tr>
@@ -117,36 +99,8 @@ export const ResponsableAlumno = () => {
             <tbody>
               {responsableAlumnoList.map((responsableAlumno, i) => (
                 <tr key={`entity-${i}`} data-cy="entityTable">
-                  <td>
-                    <Button tag={Link} to={`/responsable-alumno/${responsableAlumno.id}`} color="link" size="sm">
-                      {responsableAlumno.id}
-                    </Button>
-                  </td>
                   <td>{responsableAlumno.nombre}</td>
                   <td>{responsableAlumno.apellido}</td>
-                  <td>{responsableAlumno.dni}</td>
-                  <td>{responsableAlumno.telefono}</td>
-                  <td>{responsableAlumno.user ? responsableAlumno.user.login : ''}</td>
-                  <td>
-                    {responsableAlumno.alumnos
-                      ? responsableAlumno.alumnos.map((val, j) => (
-                          <span key={j}>
-                            <Link to={`/alumno/${val.id}`}>{val.dni}</Link>
-                            {j === responsableAlumno.alumnos.length - 1 ? '' : ', '}
-                          </span>
-                        ))
-                      : null}
-                  </td>
-                  <td>
-                    {responsableAlumno.autorizados
-                      ? responsableAlumno.autorizados.map((val, j) => (
-                          <span key={j}>
-                            <Link to={`/autorizado/${val.id}`}>{val.dni}</Link>
-                            {j === responsableAlumno.autorizados.length - 1 ? '' : ', '}
-                          </span>
-                        ))
-                      : null}
-                  </td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">
                       <Button
@@ -156,7 +110,7 @@ export const ResponsableAlumno = () => {
                         size="sm"
                         data-cy="entityDetailsButton"
                       >
-                        <FontAwesomeIcon icon="eye" /> <span className="d-none d-md-inline">Vista</span>
+                        <FontAwesomeIcon icon="eye" /> <span className="d-none d-md-inline"></span>
                       </Button>
                       <Button
                         tag={Link}
@@ -165,7 +119,7 @@ export const ResponsableAlumno = () => {
                         size="sm"
                         data-cy="entityEditButton"
                       >
-                        <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Editar</span>
+                        <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline"></span>
                       </Button>
                       <Button
                         onClick={() => (window.location.href = `/responsable-alumno/${responsableAlumno.id}/delete`)}
@@ -173,7 +127,7 @@ export const ResponsableAlumno = () => {
                         size="sm"
                         data-cy="entityDeleteButton"
                       >
-                        <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Eliminar</span>
+                        <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline"></span>
                       </Button>
                     </div>
                   </td>

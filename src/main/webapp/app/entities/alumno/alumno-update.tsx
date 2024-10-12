@@ -85,7 +85,6 @@ export const AlumnoUpdate = () => {
             <p>Loading...</p>
           ) : (
             <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
-              {!isNew ? <ValidatedField name="id" required readOnly id="alumno-id" label="ID" validate={{ required: true }} /> : null}
               <ValidatedField label="Nombre" id="alumno-nombre" name="nombre" data-cy="nombre" type="text" />
               <ValidatedField label="Apellido" id="alumno-apellido" name="apellido" data-cy="apellido" type="text" />
               <ValidatedField label="Dni" id="alumno-dni" name="dni" data-cy="dni" type="text" />
