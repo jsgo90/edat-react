@@ -64,7 +64,7 @@ export const Home = () => {
                   <CardBody>
                     <FontAwesomeIcon icon={faUserShield} size="3x" className="mb-3 text-info" />
                     <CardTitle tag="h5">Autorizados</CardTitle>
-                    <CardText>Administra a las personas autorizadas para retirar a los niños del colegio.</CardText>
+                    <CardText>Administra a las personas autorizadas para retirar a los niños.</CardText>
                     <Button color="info" href="/autorizado">
                       Gestionar Autorizados
                     </Button>
