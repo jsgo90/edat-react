@@ -144,6 +144,18 @@ public class HistorialResource {
                 if (historial.getFecha() != null) {
                     existingHistorial.setFecha(historial.getFecha());
                 }
+                if (historial.getAutorizado_dni() != null) {
+                    existingHistorial.setAutorizado_dni(historial.getAutorizado_dni());
+                }
+                if (historial.getAutorizado_dniContentType() != null) {
+                    existingHistorial.setAutorizado_dniContentType(historial.getAutorizado_dniContentType());
+                }
+                if (historial.getAutorizado_rostro() != null) {
+                    existingHistorial.setAutorizado_rostro(historial.getAutorizado_rostro());
+                }
+                if (historial.getAutorizado_rostroContentType() != null) {
+                    existingHistorial.setAutorizado_rostroContentType(historial.getAutorizado_rostroContentType());
+                }
 
                 return existingHistorial;
             })
@@ -214,6 +226,14 @@ public class HistorialResource {
         ZonedDateTime fechaRegistro = ZonedDateTime.now(zoneId);
 
         historial.setFecha(fechaRegistro);
+
+        if (historialdto.getAutorizadoDni() != null) {
+            historial.setAutorizado_dni(historialdto.getAutorizadoDni());
+        }
+
+        if (historialdto.getAutorizadoRostro() != null) {
+            historial.setAutorizado_rostro(historialdto.getAutorizadoRostro());
+        }
 
         historial = historialRepository.save(historial);
         return ResponseEntity.created(new URI("/api/historials/" + historial.getId()))

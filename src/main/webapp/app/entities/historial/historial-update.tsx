@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Button, Row, Col, FormText } from 'reactstrap';
-import { isNumber, ValidatedField, ValidatedForm } from 'react-jhipster';
+import { isNumber, ValidatedField, ValidatedForm, ValidatedBlobField } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
@@ -110,6 +110,22 @@ export const HistorialUpdate = () => {
                 validate={{
                   required: { value: true, message: 'Este campo es obligatorio.' },
                 }}
+              />
+              <ValidatedBlobField
+                label="Autorizado Dni"
+                id="historial-autorizado_dni"
+                name="autorizado_dni"
+                data-cy="autorizado_dni"
+                isImage
+                accept="image/*"
+              />
+              <ValidatedBlobField
+                label="Autorizado Rostro"
+                id="historial-autorizado_rostro"
+                name="autorizado_rostro"
+                data-cy="autorizado_rostro"
+                isImage
+                accept="image/*"
               />
               <ValidatedField id="historial-alumno" name="alumno" data-cy="alumno" label="Alumno" type="select">
                 <option value="" key="0" />

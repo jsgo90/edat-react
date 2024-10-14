@@ -14,6 +14,8 @@ const HistorialRoutes = () => (
     <Route path="new" element={<HistorialUpdate />} />
     <Route path=":id">
       <Route index element={<HistorialDetail />} />
+      <Route path="edit" element={<HistorialUpdate />} />
+      <Route path="delete" element={<HistorialDeleteDialog />} />
     </Route>
   </ErrorBoundaryRoutes>
 );

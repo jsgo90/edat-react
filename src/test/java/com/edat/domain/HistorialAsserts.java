@@ -50,6 +50,20 @@ public class HistorialAsserts {
             .as("Verify Historial relevant properties")
             .satisfies(
                 e -> assertThat(e.getFecha()).as("check fecha").usingComparator(zonedDataTimeSameInstant).isEqualTo(actual.getFecha())
+            )
+            .satisfies(e -> assertThat(e.getAutorizado_dni()).as("check autorizado_dni").isEqualTo(actual.getAutorizado_dni()))
+            .satisfies(
+                e ->
+                    assertThat(e.getAutorizado_dniContentType())
+                        .as("check autorizado_dni contenty type")
+                        .isEqualTo(actual.getAutorizado_dniContentType())
+            )
+            .satisfies(e -> assertThat(e.getAutorizado_rostro()).as("check autorizado_rostro").isEqualTo(actual.getAutorizado_rostro()))
+            .satisfies(
+                e ->
+                    assertThat(e.getAutorizado_rostroContentType())
+                        .as("check autorizado_rostro contenty type")
+                        .isEqualTo(actual.getAutorizado_rostroContentType())
             );
     }
 

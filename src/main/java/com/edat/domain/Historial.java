@@ -25,6 +25,20 @@ public class Historial implements Serializable {
     @Column(name = "fecha", nullable = false)
     private ZonedDateTime fecha;
 
+    @Lob
+    @Column(name = "autorizado_dni")
+    private byte[] autorizado_dni;
+
+    @Column(name = "autorizado_dni_content_type")
+    private String autorizado_dniContentType;
+
+    @Lob
+    @Column(name = "autorizado_rostro")
+    private byte[] autorizado_rostro;
+
+    @Column(name = "autorizado_rostro_content_type")
+    private String autorizado_rostroContentType;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = { "responsableAlumnos", "autorizados", "historials", "baneados" }, allowSetters = true)
     private Alumno alumno;
@@ -60,6 +74,58 @@ public class Historial implements Serializable {
 
     public void setFecha(ZonedDateTime fecha) {
         this.fecha = fecha;
+    }
+
+    public byte[] getAutorizado_dni() {
+        return this.autorizado_dni;
+    }
+
+    public Historial autorizado_dni(byte[] autorizado_dni) {
+        this.setAutorizado_dni(autorizado_dni);
+        return this;
+    }
+
+    public void setAutorizado_dni(byte[] autorizado_dni) {
+        this.autorizado_dni = autorizado_dni;
+    }
+
+    public String getAutorizado_dniContentType() {
+        return this.autorizado_dniContentType;
+    }
+
+    public Historial autorizado_dniContentType(String autorizado_dniContentType) {
+        this.autorizado_dniContentType = autorizado_dniContentType;
+        return this;
+    }
+
+    public void setAutorizado_dniContentType(String autorizado_dniContentType) {
+        this.autorizado_dniContentType = autorizado_dniContentType;
+    }
+
+    public byte[] getAutorizado_rostro() {
+        return this.autorizado_rostro;
+    }
+
+    public Historial autorizado_rostro(byte[] autorizado_rostro) {
+        this.setAutorizado_rostro(autorizado_rostro);
+        return this;
+    }
+
+    public void setAutorizado_rostro(byte[] autorizado_rostro) {
+        this.autorizado_rostro = autorizado_rostro;
+    }
+
+    public String getAutorizado_rostroContentType() {
+        return this.autorizado_rostroContentType;
+    }
+
+    public Historial autorizado_rostroContentType(String autorizado_rostroContentType) {
+        this.autorizado_rostroContentType = autorizado_rostroContentType;
+        return this;
+    }
+
+    public void setAutorizado_rostroContentType(String autorizado_rostroContentType) {
+        this.autorizado_rostroContentType = autorizado_rostroContentType;
     }
 
     public Alumno getAlumno() {
@@ -113,6 +179,10 @@ public class Historial implements Serializable {
         return "Historial{" +
             "id=" + getId() +
             ", fecha='" + getFecha() + "'" +
+            ", autorizado_dni='" + getAutorizado_dni() + "'" +
+            ", autorizado_dniContentType='" + getAutorizado_dniContentType() + "'" +
+            ", autorizado_rostro='" + getAutorizado_rostro() + "'" +
+            ", autorizado_rostroContentType='" + getAutorizado_rostroContentType() + "'" +
             "}";
     }
 }

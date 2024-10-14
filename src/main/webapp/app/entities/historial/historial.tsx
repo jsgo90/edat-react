@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button, Table } from 'reactstrap';
-import { Translate, TextFormat, getSortState } from 'react-jhipster';
+import { TextFormat, getSortState } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
-import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
-import { ASC, DESC, SORT } from 'app/shared/util/pagination.constants';
+import { APP_DATE_FORMAT } from 'app/config/constants';
+import { ASC, DESC } from 'app/shared/util/pagination.constants';
 import { overrideSortStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
@@ -13,7 +13,6 @@ import { getEntities } from './historial.reducer';
 
 export const Historial = () => {
   const dispatch = useAppDispatch();
-
   const pageLocation = useLocation();
   const navigate = useNavigate();
 
@@ -96,10 +95,14 @@ export const Historial = () => {
                 <tr key={`entity-${i}`} data-cy="entityTable">
                   <td>{historial.fecha ? <TextFormat type="date" value={historial.fecha} format={APP_DATE_FORMAT} /> : null}</td>
                   <td>
-                    {historial.alumno.nombre} {historial.alumno.apellido} - {historial.alumno.dni}
+                    {historial.alumno
+                      ? `${historial.alumno.nombre} ${historial.alumno.apellido} - ${historial.alumno.dni}`
+                      : 'Alumno no disponible'}
                   </td>
                   <td>
-                    {historial.autorizado.nombre} {historial.autorizado.apellido} - {historial.autorizado.dni}
+                    {historial.autorizado
+                      ? `${historial.autorizado.nombre} ${historial.autorizado.apellido} - ${historial.autorizado.dni}`
+                      : 'Autorizado no disponible'}
                   </td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">

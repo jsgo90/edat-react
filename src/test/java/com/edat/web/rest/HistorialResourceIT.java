@@ -20,6 +20,7 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,6 +48,16 @@ class HistorialResourceIT {
 
     private static final ZonedDateTime DEFAULT_FECHA = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime UPDATED_FECHA = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+
+    private static final byte[] DEFAULT_AUTORIZADO_DNI = TestUtil.createByteArray(1, "0");
+    private static final byte[] UPDATED_AUTORIZADO_DNI = TestUtil.createByteArray(1, "1");
+    private static final String DEFAULT_AUTORIZADO_DNI_CONTENT_TYPE = "image/jpg";
+    private static final String UPDATED_AUTORIZADO_DNI_CONTENT_TYPE = "image/png";
+
+    private static final byte[] DEFAULT_AUTORIZADO_ROSTRO = TestUtil.createByteArray(1, "0");
+    private static final byte[] UPDATED_AUTORIZADO_ROSTRO = TestUtil.createByteArray(1, "1");
+    private static final String DEFAULT_AUTORIZADO_ROSTRO_CONTENT_TYPE = "image/jpg";
+    private static final String UPDATED_AUTORIZADO_ROSTRO_CONTENT_TYPE = "image/png";
 
     private static final String ENTITY_API_URL = "/api/historials";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -78,7 +89,12 @@ class HistorialResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Historial createEntity(EntityManager em) {
-        Historial historial = new Historial().fecha(DEFAULT_FECHA);
+        Historial historial = new Historial()
+            .fecha(DEFAULT_FECHA)
+            .autorizado_dni(DEFAULT_AUTORIZADO_DNI)
+            .autorizado_dniContentType(DEFAULT_AUTORIZADO_DNI_CONTENT_TYPE)
+            .autorizado_rostro(DEFAULT_AUTORIZADO_ROSTRO)
+            .autorizado_rostroContentType(DEFAULT_AUTORIZADO_ROSTRO_CONTENT_TYPE);
         // Add required entity
         Autorizado autorizado;
         if (TestUtil.findAll(em, Autorizado.class).isEmpty()) {
@@ -99,7 +115,12 @@ class HistorialResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Historial createUpdatedEntity(EntityManager em) {
-        Historial historial = new Historial().fecha(UPDATED_FECHA);
+        Historial historial = new Historial()
+            .fecha(UPDATED_FECHA)
+            .autorizado_dni(UPDATED_AUTORIZADO_DNI)
+            .autorizado_dniContentType(UPDATED_AUTORIZADO_DNI_CONTENT_TYPE)
+            .autorizado_rostro(UPDATED_AUTORIZADO_ROSTRO)
+            .autorizado_rostroContentType(UPDATED_AUTORIZADO_ROSTRO_CONTENT_TYPE);
         // Add required entity
         Autorizado autorizado;
         if (TestUtil.findAll(em, Autorizado.class).isEmpty()) {
@@ -183,7 +204,11 @@ class HistorialResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(historial.getId().intValue())))
-            .andExpect(jsonPath("$.[*].fecha").value(hasItem(sameInstant(DEFAULT_FECHA))));
+            .andExpect(jsonPath("$.[*].fecha").value(hasItem(sameInstant(DEFAULT_FECHA))))
+            .andExpect(jsonPath("$.[*].autorizado_dniContentType").value(hasItem(DEFAULT_AUTORIZADO_DNI_CONTENT_TYPE)))
+            .andExpect(jsonPath("$.[*].autorizado_dni").value(hasItem(Base64.getEncoder().encodeToString(DEFAULT_AUTORIZADO_DNI))))
+            .andExpect(jsonPath("$.[*].autorizado_rostroContentType").value(hasItem(DEFAULT_AUTORIZADO_ROSTRO_CONTENT_TYPE)))
+            .andExpect(jsonPath("$.[*].autorizado_rostro").value(hasItem(Base64.getEncoder().encodeToString(DEFAULT_AUTORIZADO_ROSTRO))));
     }
 
     @SuppressWarnings({ "unchecked" })
@@ -215,7 +240,11 @@ class HistorialResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(historial.getId().intValue()))
-            .andExpect(jsonPath("$.fecha").value(sameInstant(DEFAULT_FECHA)));
+            .andExpect(jsonPath("$.fecha").value(sameInstant(DEFAULT_FECHA)))
+            .andExpect(jsonPath("$.autorizado_dniContentType").value(DEFAULT_AUTORIZADO_DNI_CONTENT_TYPE))
+            .andExpect(jsonPath("$.autorizado_dni").value(Base64.getEncoder().encodeToString(DEFAULT_AUTORIZADO_DNI)))
+            .andExpect(jsonPath("$.autorizado_rostroContentType").value(DEFAULT_AUTORIZADO_ROSTRO_CONTENT_TYPE))
+            .andExpect(jsonPath("$.autorizado_rostro").value(Base64.getEncoder().encodeToString(DEFAULT_AUTORIZADO_ROSTRO)));
     }
 
     @Test
@@ -237,7 +266,12 @@ class HistorialResourceIT {
         Historial updatedHistorial = historialRepository.findById(historial.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedHistorial are not directly saved in db
         em.detach(updatedHistorial);
-        updatedHistorial.fecha(UPDATED_FECHA);
+        updatedHistorial
+            .fecha(UPDATED_FECHA)
+            .autorizado_dni(UPDATED_AUTORIZADO_DNI)
+            .autorizado_dniContentType(UPDATED_AUTORIZADO_DNI_CONTENT_TYPE)
+            .autorizado_rostro(UPDATED_AUTORIZADO_ROSTRO)
+            .autorizado_rostroContentType(UPDATED_AUTORIZADO_ROSTRO_CONTENT_TYPE);
 
         restHistorialMockMvc
             .perform(
@@ -315,6 +349,12 @@ class HistorialResourceIT {
         Historial partialUpdatedHistorial = new Historial();
         partialUpdatedHistorial.setId(historial.getId());
 
+        partialUpdatedHistorial
+            .autorizado_dni(UPDATED_AUTORIZADO_DNI)
+            .autorizado_dniContentType(UPDATED_AUTORIZADO_DNI_CONTENT_TYPE)
+            .autorizado_rostro(UPDATED_AUTORIZADO_ROSTRO)
+            .autorizado_rostroContentType(UPDATED_AUTORIZADO_ROSTRO_CONTENT_TYPE);
+
         restHistorialMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedHistorial.getId())
@@ -344,7 +384,12 @@ class HistorialResourceIT {
         Historial partialUpdatedHistorial = new Historial();
         partialUpdatedHistorial.setId(historial.getId());
 
-        partialUpdatedHistorial.fecha(UPDATED_FECHA);
+        partialUpdatedHistorial
+            .fecha(UPDATED_FECHA)
+            .autorizado_dni(UPDATED_AUTORIZADO_DNI)
+            .autorizado_dniContentType(UPDATED_AUTORIZADO_DNI_CONTENT_TYPE)
+            .autorizado_rostro(UPDATED_AUTORIZADO_ROSTRO)
+            .autorizado_rostroContentType(UPDATED_AUTORIZADO_ROSTRO_CONTENT_TYPE);
 
         restHistorialMockMvc
             .perform(

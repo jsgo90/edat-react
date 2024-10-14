@@ -17,6 +17,18 @@
             <column name="fecha" type="${datetimeType}">
                 <constraints nullable="false" />
             </column>
+            <column name="autorizado_dni" type="${blobType}">
+                <constraints nullable="true" />
+            </column>
+            <column name="autorizado_dni_content_type" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="autorizado_rostro" type="${blobType}">
+                <constraints nullable="true" />
+            </column>
+            <column name="autorizado_rostro_content_type" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
             <column name="alumno_id" type="bigint">
                 <constraints nullable="true" />
             </column>
@@ -46,6 +58,10 @@
                   usePreparedStatements="true">
             <column name="id" type="numeric"/>
             <column name="fecha" type="date"/>
+            <column name="autorizado_dni" type="blob"/>
+            <column name="autorizado_dni_content_type" type="string"/>
+            <column name="autorizado_rostro" type="blob"/>
+            <column name="autorizado_rostro_content_type" type="string"/>
             <column name="autorizado_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
