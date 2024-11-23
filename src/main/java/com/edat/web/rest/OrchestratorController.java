@@ -38,7 +38,9 @@ public class OrchestratorController {
     @PostMapping("/processRequest")
     public ResponseEntity<String> processRequest(
         @RequestParam("image_dni") MultipartFile dni,
-        @RequestParam("image_rostro") MultipartFile rostro
+        @RequestParam("image_rostro") MultipartFile rostro,
+        @RequestParam("alumnoId") String alumnoId,
+        @RequestParam("autorizadoId") String autorizadoId
     ) {
         if (dni == null || dni.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La imagen del DNI es obligatoria.");
@@ -91,21 +93,22 @@ public class OrchestratorController {
                 log.info("OCR Results - Apellido: {}, Nombre: {}, Numero DNI: {}", apellido, nombre, numeroDNI);
             }
 
+            HistorialDTO historialDto = new HistorialDTO();
+
+            historialDto.setAlumnoId(Long.parseLong(alumnoId));
+            historialDto.setAutorizadoId(Long.parseLong(autorizadoId));
+
+            byte[] autorizadoRostroBytes = rostro.getBytes();
+            historialDto.setAutorizadoRostro(autorizadoRostroBytes);
+
+            if (imageBase64 != null && !imageBase64.isEmpty()) {
+                byte[] imageBytes = Base64.getDecoder().decode(imageBase64);
+                historialDto.setAutorizadoDni(imageBytes);
+            }
+
+            historialResource.registrarSalida(historialDto);
+
             if (yoloResponse.isMatch()) {
-                HistorialDTO historialDto = new HistorialDTO();
-                historialDto.setAlumnoId(1L);
-                historialDto.setAutorizadoId(10L);
-
-                byte[] autorizadoRostroBytes = rostro.getBytes();
-                historialDto.setAutorizadoRostro(autorizadoRostroBytes);
-
-                if (imageBase64 != null && !imageBase64.isEmpty()) {
-                    byte[] imageBytes = Base64.getDecoder().decode(imageBase64);
-                    historialDto.setAutorizadoDni(imageBytes);
-                }
-
-                historialResource.registrarSalida(historialDto);
-
                 return ResponseEntity.ok("Las imágenes coinciden. Se ha verificado la misma persona.");
             } else {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Las imágenes no coinciden. No Autorizado.");
