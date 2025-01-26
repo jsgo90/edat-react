@@ -1,5 +1,7 @@
 package com.edat.service.dto;
 
+import java.time.ZonedDateTime;
+
 public class HistorialDTO {
 
     private Long alumnoId;

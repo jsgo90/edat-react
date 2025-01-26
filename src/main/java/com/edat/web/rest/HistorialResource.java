@@ -7,6 +7,7 @@ import com.edat.repository.AlumnoRepository;
 import com.edat.repository.AutorizadoRepository;
 import com.edat.repository.HistorialRepository;
 import com.edat.service.dto.HistorialDTO;
+import com.edat.service.dto.HistorialListDTO;
 import com.edat.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -17,6 +18,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -251,5 +253,25 @@ public class HistorialResource {
         Page<Historial> historiales = historialRepository.findByAlumnoIdOrderByFechaDesc(alumnoId, pageable);
 
         return ResponseEntity.ok(historiales);
+    }
+
+    @GetMapping("/list/alumno/{alumnoId}")
+    public ResponseEntity<List<HistorialListDTO>> getAllHistorialsWithoutDetails(
+        @PathVariable Long alumnoId,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        //Page<Object> datesPage = historialRepository.findHistorialDatesByAlumnoIdOrderByFechaDesc(alumnoId, pageable);
+        //List<Object> datesList = datesPage.getContent();
+        //return ResponseEntity.ok().body(datesList);
+
+        List<HistorialListDTO> historialDTOs = historialRepository
+            .findByAlumnoIdOrderByFechaDesc(alumnoId, pageable)
+            .stream()
+            .map(h -> new HistorialListDTO(h.getFecha(), h.getAutorizado().getNombre(), h.getAutorizado().getApellido()))
+            .collect(Collectors.toList());
+
+        return ResponseEntity.ok(historialDTOs);
     }
 }

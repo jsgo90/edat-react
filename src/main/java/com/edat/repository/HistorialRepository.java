@@ -1,6 +1,7 @@
 package com.edat.repository;
 
 import com.edat.domain.Historial;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -42,6 +43,9 @@ public interface HistorialRepository extends JpaRepository<Historial, Long> {
 
     @Query("SELECT h FROM Historial h WHERE h.alumno.id = :alumnoId ORDER BY h.fecha DESC")
     Page<Historial> findByAlumnoIdOrderByFechaDesc(Long alumnoId, Pageable pageable);
-    //@Query("SELECT h FROM Historial h WHERE h.alumno.id = :alumnoId ORDER BY h.fecha DESC")
-    //List<Historial> findByAlumnoIdOrderByFechaDesc(@Param("alumnoId") Long alumnoId);
+
+    @Query(
+        "SELECT h.fecha, h.autorizado.nombre, h.autorizado.apellido FROM Historial h WHERE h.alumno.id = :alumnoId ORDER BY h.fecha DESC"
+    )
+    Page<Object> findHistorialDatesByAlumnoIdOrderByFechaDesc(Long alumnoId, Pageable pageable);
 }
